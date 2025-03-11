@@ -1,25 +1,27 @@
 #include <SFML/Graphics.hpp>
+#include "../Header/renderer.hpp"
+#include "../Header/fontManager.hpp"
 #include <iostream>
 int main()
 {
  
-    sf::Font font; //fonts on hold until fix
-    if (!font.openFromFile("/Users/alex/Documents/XcodeProjects/SFML-Prototype/Assets/OpenSans.ttf"))
-    {
-        std::cerr << "Failed to load font from Assets/OpenSans.ttf\n";
-        return -1;
-    }
-    
-    
-    sf::Text text(font);
+    // Create and load fonts with FontManager.
+     FontManager fontManager;
+     if (!fontManager.loadFont("OpenSans", "/Users/alex/Documents/XcodeProjects/SFML-Prototype/Assets/OpenSans.ttf")) {
+         std::cerr << "Failed to load OpenSans font.\n";
+         return -1;
+     }
+   
+    sf::Text text(fontManager.getFont("OpenSans"));
     // set the string to display
     text.setString("Hello world");
     // set the character size
-    text.setCharacterSize(24); // in pixels, not points!
+    text.setCharacterSize(24); //pixels
     // set the color
     text.setFillColor(sf::Color::Red);
     
-    
+    Renderer renderer;
+    renderer.addDrawable(text);
 
     //Create window
     auto window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "CMake SFML Project");
@@ -53,7 +55,8 @@ int main()
         window.clear(sf::Color::Black);
         
         //draw things here
-        window.draw(text);
+        //window.draw(text);
+        renderer.draw(window);
         
         //complete the frame
         window.display();
